@@ -5,16 +5,16 @@ import Navbar from './Navbar';
 
 const Hero = () => {
   const [showContent, setShowContent] = useState(false);
-  const [highwaySpeed, setHighwaySpeed] = useState(2); // Start at full speed
+  const [highwaySpeed, setHighwaySpeed] = useState(2);
 
   useEffect(() => {
-    // Highway plays at full speed for 2 seconds
+    
     const slowDownTimer = setTimeout(() => {
-      // Slow down to barely moving (0.1 is very slow, almost stopped)
+      
       setHighwaySpeed(0.01);
     }, 2000);
 
-    // Show content 1 second after slowing down starts
+    
     const contentTimer = setTimeout(() => {
       setShowContent(true);
     }, 2500);
@@ -27,10 +27,10 @@ const Hero = () => {
 
   return (
     <section id="hero" className="relative w-full h-screen overflow-hidden">
-      {/* Hyperspeed Background */}
+      
       <div className="absolute inset-0 z-0">
         <Hyperspeed
-          targetSpeed={highwaySpeed} // Control speed externally
+          targetSpeed={highwaySpeed}
           effectOptions={{
             distortion: "mountainDistortion",
             length: 400,
@@ -45,15 +45,14 @@ const Hero = () => {
               background: 0x000000,
               shoulderLines: 0x131318,
               brokenLines: 0x131318,
-              leftCars: [0xff0000, 0xff0000],   // RED tail lights
-              rightCars: [0xffffff, 0xffffff],  // WHITE headlights
+              leftCars: [0xff0000, 0xff0000],   
+              rightCars: [0xffffff, 0xffffff],
               sticks: 0x03b3c3
             }
           }}
         />
       </div>
 
-      {/* Navbar & Hero Content - fade in after highway slows */}
       {showContent && (
         <>
           <Navbar />
