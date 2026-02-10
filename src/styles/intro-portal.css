@@ -1,0 +1,25 @@
+/* Phase 1 + 2: text becomes the portal */
+.portal-text {
+  animation: portalText 600ms ease-in forwards;
+}
+
+@keyframes portalText {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  20% {
+    transform: scale(1.06);
+  }
+
+  100% {
+    transform: scale(5);
+    opacity: 0;
+  }
+}
+
+/* Particles hyperspeed illusion */
+.portal-particles {
+  transform: scale(1.2);
+}
