@@ -941,32 +941,42 @@ class App {
   speedUpTarget: number;
   speedUp: number;
   timeOffset: number;
-  externalSpeedTarget: number; // NEW: External speed control
+  externalSpeedTarget: number; 
 
   constructor(container: HTMLElement, options: HyperspeedOptions) {
-    this.options = options;
-    if (!this.options.distortion) {
-      this.options.distortion = {
-        uniforms: distortion_uniforms,
-        getDistortion: distortion_vertex
-      };
-    }
-    this.container = container;
+  this.options = options;
+  if (!this.options.distortion) {
+    this.options.distortion = {
+      uniforms: distortion_uniforms,
+      getDistortion: distortion_vertex
+    };
+  }
+  this.container = container;
 
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: false,
-      alpha: true
-    });
-    this.renderer.setSize(container.offsetWidth, container.offsetHeight, false);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+  this.renderer = new THREE.WebGLRenderer({
+    antialias: false,
+    alpha: true
+  });
+  
+  
+  const width = container.clientWidth || window.innerWidth;
+  const height = container.clientHeight || window.innerHeight;
+  
+  this.renderer.setSize(width, height, false);
+  this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
 
-    this.composer = new EffectComposer(this.renderer);
-    container.appendChild(this.renderer.domElement);
+  this.composer = new EffectComposer(this.renderer);
+  container.appendChild(this.renderer.domElement);
 
-    this.camera = new THREE.PerspectiveCamera(options.fov, container.offsetWidth / container.offsetHeight, 0.1, 10000);
-    this.camera.position.z = -5;
-    this.camera.position.y = 8;
-    this.camera.position.x = 0;
+  this.camera = new THREE.PerspectiveCamera(
+    options.fov, 
+    width / height, 
+    0.1, 
+    10000
+  );
+  this.camera.position.z = -5;
+  this.camera.position.y = 8;
+  this.camera.position.x = 0;
 
     this.scene = new THREE.Scene();
     this.scene.background = null;
@@ -1026,14 +1036,14 @@ class App {
   }
 
   onWindowResize() {
-    const width = this.container.offsetWidth;
-    const height = this.container.offsetHeight;
+  const width = this.container.clientWidth || window.innerWidth;
+  const height = this.container.clientHeight || window.innerHeight;
 
-    this.renderer.setSize(width, height);
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
-    this.composer.setSize(width, height);
-  }
+  this.renderer.setSize(width, height, false);
+  this.camera.aspect = width / height;
+  this.camera.updateProjectionMatrix();
+  this.composer.setSize(width, height, false);
+}
 
   initPasses() {
     this.renderPass = new RenderPass(this.scene, this.camera);
@@ -1252,18 +1262,27 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {}, targetSpeed }) =>
   const appRef = useRef<App | null>(null);
 
   useEffect(() => {
-    if (appRef.current) {
-      appRef.current.dispose();
-      const container = document.getElementById('lights');
-      if (container) {
-        while (container.firstChild) {
-          container.removeChild(container.firstChild);
-        }
+  if (appRef.current) {
+    appRef.current.dispose();
+    const container = document.getElementById('lights');
+    if (container) {
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
       }
     }
+  }
 
-    const container = hyperspeed.current;
-    if (!container) return;
+  const container = hyperspeed.current;
+  if (!container) return;
+
+  const initializeApp = () => {
+    const width = container.clientWidth || window.innerWidth;
+    const height = container.clientHeight || window.innerHeight;
+    
+    if (width === 0 || height === 0) {
+      requestAnimationFrame(initializeApp);
+      return;
+    }
 
     const options = { ...mergedOptions };
     if (typeof options.distortion === 'string') {
@@ -1273,22 +1292,37 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {}, targetSpeed }) =>
     const myApp = new App(container, options);
     appRef.current = myApp;
     myApp.loadAssets().then(myApp.init);
+  };
 
-    return () => {
-      if (appRef.current) {
-        appRef.current.dispose();
-      }
-    };
-  }, []);
+  const timer = setTimeout(initializeApp, 100);
 
-  // NEW: Update external speed when targetSpeed prop changes
+  return () => {
+    clearTimeout(timer);
+    if (appRef.current) {
+      appRef.current.dispose();
+    }
+  };
+}, []);
+
   useEffect(() => {
     if (appRef.current && targetSpeed !== undefined) {
       appRef.current.setExternalSpeed(targetSpeed);
     }
   }, [targetSpeed]);
 
-  return <div id="lights" className="w-full h-full" ref={hyperspeed}></div>;
+  return <div 
+    id="lights" 
+    ref={hyperspeed}
+    style={{
+      position: 'fixed', // Changed from absolute to fixed
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      overflow: 'hidden',
+      pointerEvents: 'none' // Allows clicks to pass through
+    }}
+  />;
 };
 
 export default Hyperspeed;

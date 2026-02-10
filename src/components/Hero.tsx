@@ -28,7 +28,7 @@ const Hero = () => {
   return (
     <section id="hero" className="relative w-full h-screen overflow-hidden">
       
-      <div className="absolute inset-0 z-0">
+      <div className="fixed inset-0 z-0 w-full h-full">
         <Hyperspeed
           targetSpeed={highwaySpeed}
           effectOptions={{
@@ -57,7 +57,7 @@ const Hero = () => {
         <>
           <Navbar />
           
-          <div className="relative z-10 flex items-center justify-center h-full">
+          <div className="relative z-10 flex items-center justify-center h-full pointer-events-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
