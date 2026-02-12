@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import ElectricCard from './ElectricCard';
+import profile from "../assets/profile.jpg";
 
 const About = () => {
 
@@ -77,7 +78,7 @@ const About = () => {
                 <div className="relative w-full aspect-3/4">
                   
                   <img
-                  src="./public/profile.jpg" 
+                  src={profile} 
                   alt="Adrianne Jade"
                   className="w-full h-full object-cover"
                   style={{
