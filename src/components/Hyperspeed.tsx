@@ -56,12 +56,12 @@ interface HyperspeedOptions {
   carFloorSeparation: [number, number];
   colors: Colors;
   isHyper?: boolean;
-  externalSpeed?: number; // NEW: External speed control
+  externalSpeed?: number;
 }
 
 interface HyperspeedProps {
   effectOptions?: Partial<HyperspeedOptions>;
-  targetSpeed?: number; // NEW: Control speed externally
+  targetSpeed?: number;
 }
 
 const defaultOptions: HyperspeedOptions = {
@@ -431,7 +431,7 @@ function pickRandom<T>(arr: T | T[]): T {
 function lerp(current: number, target: number, speed = 0.1, limit = 0.001): number {
   let change = (target - current) * speed;
   if (Math.abs(change) < limit) {
-    change = target - current; // Snap to target when very close
+    change = target - current;
   }
   return change;
 }
@@ -1015,7 +1015,7 @@ class App {
     this.speedUpTarget = 0;
     this.speedUp = 0;
     this.timeOffset = 0;
-    this.externalSpeedTarget = options.externalSpeed !== undefined ? options.externalSpeed : 2; // NEW
+    this.externalSpeedTarget = options.externalSpeed !== undefined ? options.externalSpeed : 2;
 
     this.tick = this.tick.bind(this);
     this.init = this.init.bind(this);
@@ -1030,7 +1030,6 @@ class App {
     window.addEventListener('resize', this.onWindowResize.bind(this));
   }
 
-  // NEW: Method to set external speed
   setExternalSpeed(speed: number) {
     this.externalSpeedTarget = speed;
   }
@@ -1160,14 +1159,11 @@ class App {
   update(delta: number) {
   const lerpPercentage = Math.exp(-(-60 * Math.log2(1 - 0.1)) * delta);
   
-  // NEW: Use external speed if set, otherwise use mouse/touch speed
   const targetSpeed = this.externalSpeedTarget;
   
-  // Improved lerp that actually stops at 0
   const speedDiff = lerp(this.speedUp, targetSpeed, lerpPercentage, 0.001);
   this.speedUp += speedDiff;
   
-  // CRITICAL: Force stop when very close to 0
   if (Math.abs(this.speedUp) < 0.001) {
     this.speedUp = 0;
   }
@@ -1256,7 +1252,7 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {}, targetSpeed }) =>
   const mergedOptions: HyperspeedOptions = {
     ...defaultOptions,
     ...effectOptions,
-    externalSpeed: targetSpeed // NEW: Pass external speed to options
+    externalSpeed: targetSpeed
   };
   const hyperspeed = useRef<HTMLDivElement>(null);
   const appRef = useRef<App | null>(null);
@@ -1314,13 +1310,13 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {}, targetSpeed }) =>
     id="lights" 
     ref={hyperspeed}
     style={{
-      position: 'fixed', // Changed from absolute to fixed
+      position: 'fixed',
       top: 0,
       left: 0,
       width: '100vw',
       height: '100vh',
       overflow: 'hidden',
-      pointerEvents: 'none' // Allows clicks to pass through
+      pointerEvents: 'none'
     }}
   />;
 };

@@ -4,16 +4,20 @@ import "../styles/intro-glitch.css";
 import "../styles/intro-portal.css";
 
 type IntroProps = {
+
   onComplete: () => void;
+
 };
 
 export default function Intro({ onComplete }: IntroProps) {
+
   const [isAnimating, setIsAnimating] = useState(false);
 
   const prefersReducedMotion =
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const startPortal = () => {
+
     if (isAnimating) return;
 
     if (prefersReducedMotion) {
@@ -23,48 +27,53 @@ export default function Intro({ onComplete }: IntroProps) {
 
     setIsAnimating(true);
 
-    // Total animation time ≈ 600ms
     setTimeout(() => {
       onComplete();
     }, 600);
+
   };
 
   return (
+
     <section className="relative h-screen w-full overflow-hidden bg-neutral-950">
-      {/* Particles */}
+      
       <div
-        className={`relative w-full h-full transition-transform duration-500 ease-in ${
-          isAnimating ? "portal-particles" : ""
+      className={`relative w-full h-full transition-transform duration-500 ease-in ${
+        isAnimating ? "portal-particles" : ""
         }`}
       >
+
         <Particles
-          particleColors={["#ffffff"]}
-          particleCount={200}
-          particleSpread={10}
-          speed={isAnimating ? 0.6 : 0.1}
-          particleBaseSize={100}
-          moveParticlesOnHover
-          particleHoverFactor={0.8}
+        particleColors={["#ffffff"]}
+        particleCount={200}
+        particleSpread={10}
+        speed={isAnimating ? 0.6 : 0.1}
+        particleBaseSize={100}
+        moveParticlesOnHover
+        particleHoverFactor={0.8}
         />
+
       </div>
 
-      {/* Portal text */}
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
         <h1
-          className={`hero glitch layers intro-glitch cursor-pointer select-none
-            ${isAnimating ? "portal-text" : ""}`}
-          data-text="Welcome"
-          tabIndex={0}
-          onClick={startPortal}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              startPortal();
-            }
-          }}
-          style={{ pointerEvents: "auto" }}
+        className={`hero glitch layers intro-glitch cursor-pointer select-none
+          ${isAnimating ? "portal-text" : ""}`}
+        data-text="Welcome"
+        tabIndex={0}
+        onClick={startPortal}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            startPortal();
+          }
+        }}
+        style={{ pointerEvents: "auto" }}
         >
+
           <span>Welcome</span>
+
         </h1>
+        
       </div>
     </section>
   );
