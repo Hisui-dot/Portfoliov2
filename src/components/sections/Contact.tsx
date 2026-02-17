@@ -11,19 +11,40 @@ const Contact = () => {
     message: '',
   });
   const [status, setStatus] = useState<FormStatus>('idle');
+  const [emailError, setEmailError] = useState<string>('');
+
+  const isValidEmailDomain = (email: string): boolean => {
+    const allowedDomains = ['@gmail.com', '@yahoo.com'];
+    return allowedDomains.some(domain => email.toLowerCase().endsWith(domain));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    const { name, value } = e.target;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === 'email' && emailError) {
+      if (isValidEmailDomain(value)) {
+        setEmailError('');
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isValidEmailDomain(formData.email)) {
+      setEmailError('Please use a Gmail or Yahoo email address.');
+      return;
+    }
+
     setStatus('sending');
+    setEmailError('');
 
     try {
       await emailjs.send(
@@ -67,7 +88,7 @@ const Contact = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-
+    
             <p className="text-xs uppercase tracking-[0.3em] text-violet-400 font-medium">
               Contact
             </p>
@@ -97,7 +118,7 @@ const Contact = () => {
             <div className="border border-white/10 rounded-xl p-8 sm:p-10 shadow-2xl bg-black">
               
               <form onSubmit={handleSubmit} className="space-y-6">
-
+                
                 <div>
                   <label
                     htmlFor="name"
@@ -133,9 +154,23 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     disabled={isDisabled}
-                    className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    placeholder="your.email@example.com"
+                    className={`w-full px-4 py-3 bg-black border rounded-lg text-white placeholder-white/30 focus:outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
+                      emailError 
+                        ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/30' 
+                        : 'border-white/10 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/30'
+                    }`}
+                    placeholder="your.email@gmail.com"
                   />
+                  
+                  {emailError && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-2 text-sm text-red-400"
+                    >
+                      {emailError}
+                    </motion.p>
+                  )}
                 </div>
 
                 <div>
