@@ -1,25 +1,96 @@
-/* Phase 1 + 2: text becomes the portal */
+/* Click pulse: echo effect with extended hold before fadeout */
 .portal-text {
-  animation: portalText 600ms ease-in forwards;
+  animation: portalPulse 1000ms ease-out forwards;
 }
 
-@keyframes portalText {
+@keyframes portalPulse {
   0% {
     transform: scale(1);
     opacity: 1;
+    filter: brightness(1);
+    text-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.5),
+      0 0 20px rgba(255, 255, 255, 0.3);
   }
-
-  20% {
-    transform: scale(1.06);
+  
+  10% {
+    transform: scale(1.08);
+    opacity: 1;
+    filter: brightness(1.6);
+    text-shadow: 
+      0 0 30px rgba(255, 255, 255, 0.9),
+      0 0 60px rgba(255, 255, 255, 0.6),
+      0 0 90px rgba(255, 255, 255, 0.3);
   }
-
+  
+  30% {
+    transform: scale(1.12);
+    opacity: 1;
+    filter: brightness(1.3);
+    text-shadow: 
+      0 0 40px rgba(255, 255, 255, 0.7),
+      0 0 80px rgba(255, 255, 255, 0.4);
+  }
+  
+  /* Hold the glow */
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+    filter: brightness(1.2);
+    text-shadow: 
+      0 0 35px rgba(255, 255, 255, 0.6),
+      0 0 70px rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Begin fadeout */
   100% {
-    transform: scale(5);
+    transform: scale(1.15);
     opacity: 0;
+    filter: brightness(1);
+    text-shadow: 
+      0 0 50px rgba(255, 255, 255, 0.3),
+      0 0 100px rgba(255, 255, 255, 0.1);
   }
 }
 
-/* Particles hyperspeed illusion */
+/* Pseudo-element echo rings */
+.portal-text::before,
+.portal-text::after {
+  animation: echoRing 1000ms ease-out forwards;
+}
+
+@keyframes echoRing {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  
+  40% {
+    opacity: 0.4;
+    transform: scale(1.3);
+  }
+  
+  70% {
+    opacity: 0.2;
+    transform: scale(1.5);
+  }
+  
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+/* Particles: subtle fade */
 .portal-particles {
-  transform: scale(1.2);
+  animation: particlesFade 1000ms ease-out forwards;
+}
+
+@keyframes particlesFade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
 }

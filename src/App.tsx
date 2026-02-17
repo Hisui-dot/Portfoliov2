@@ -1,18 +1,30 @@
 import { useState } from 'react';
-import Intro from './components/Intro';
-import PortfolioSections from './components/PortfolioSections';
+import Intro from "./components/sections/Intro";
+import Navbar from "./components/layout/Navbar";
+import Hero from "./components/sections/Hero";
+import About from "./components/sections/About";
+import Projects from "./components/sections/Projects";
+import Tech from "./components/sections/Tech";
+import Contact from "./components/sections/Contact";
 
 function App() {
-  const [showPortfolio, setShowPortfolio] = useState(false);
+  const [showHero, setShowHero] = useState(false);
 
   return (
     <>
-      {!showPortfolio && (
-        <Intro onComplete={() => setShowPortfolio(true)} />
+      {!showHero && (
+        <Intro onComplete={() => setShowHero(true)} />
       )}
-      
-      {showPortfolio && (
-        <PortfolioSections />
+
+      {showHero && (
+        <>
+          <Navbar />
+          <Hero />
+          <About />
+          <Projects />
+          <Tech />
+          <Contact />
+        </>
       )}
     </>
   );
