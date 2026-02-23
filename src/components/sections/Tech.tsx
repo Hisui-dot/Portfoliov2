@@ -7,21 +7,7 @@ const services: Service[] = [
     number: '01',
     title: 'Web Development',
     description: 'Modern, scalable web applications built for performance and long-term maintainability.',
-    tech: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'Spring Boot', 'PostgreSQL'],
-  },
-  {
-    id: 2,
-    number: '02',
-    title: 'Backend Systems',
-    description: 'Secure and structured backend architectures designed for production-level systems.',
-    tech: ['Java', 'Spring Boot', 'Spring Security', 'JPA', 'PostgreSQL', 'Docker'],
-  },
-  {
-    id: 3,
-    number: '03',
-    title: 'Deployment & Architecture',
-    description: 'Production-ready systems deployed using modern containerization and cloud workflows.',
-    tech: ['Vercel', 'Docker', 'Managed PostgreSQL', 'Cloud Storage'],
+    tech: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'Java', 'Spring Boot', 'PostgreSQL'],
   },
 ];
 
