@@ -32,7 +32,7 @@ export default function Intro({ onComplete }: IntroProps) {
     <section className="relative h-screen w-full overflow-hidden bg-neutral-950">
       
       <div
-        className={`relative w-full h-full transition-opacity duration-1000 ease-out ${
+        className={`relative w-full h-full transition-opacity duration-1500 ease-out ${
           isAnimating ? "portal-particles" : ""
         }`}
       >

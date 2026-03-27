@@ -1,10 +1,12 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import SocialButtons from '../ui/SocialButtons';
 import type { ContactFormData, FormStatus } from '../../types/contact';
 
-const Contact = () => {
+export default function Contact() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -15,29 +17,22 @@ const Contact = () => {
 
   const isValidEmailDomain = (email: string): boolean => {
     const allowedDomains = ['@gmail.com', '@yahoo.com'];
-    return allowedDomains.some(domain => email.toLowerCase().endsWith(domain));
+    return allowedDomains.some((domain) => email.toLowerCase().endsWith(domain));
   };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-
-    if (name === 'email' && emailError) {
-      if (isValidEmailDomain(value)) {
-        setEmailError('');
-      }
+    setFormData({ ...formData, [name]: value });
+    if (name === 'email' && emailError && isValidEmailDomain(value)) {
+      setEmailError('');
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!isValidEmailDomain(formData.email)) {
       setEmailError('Please use a Gmail or Yahoo email address.');
       return;
@@ -60,12 +55,10 @@ const Contact = () => {
 
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
-
       setTimeout(() => setStatus('idle'), 5000);
     } catch (error) {
       console.error('EmailJS Error:', error);
       setStatus('error');
-
       setTimeout(() => setStatus('idle'), 5000);
     }
   };
@@ -78,9 +71,8 @@ const Contact = () => {
       className="min-h-screen bg-black text-white flex items-center px-6 sm:px-8 md:px-16 lg:px-24 py-20"
     >
       <div className="max-w-7xl w-full mx-auto">
-        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-          
+
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -88,7 +80,6 @@ const Contact = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-    
             <p className="text-xs uppercase tracking-[0.3em] text-violet-400 font-medium">
               Contact
             </p>
@@ -96,11 +87,11 @@ const Contact = () => {
             <div className="w-16 h-0.5 bg-linear-to-r from-violet-600 to-transparent" />
 
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight">
-              Let's Build Something Meaningful
+              Let&apos;s Build Something Meaningful
             </h2>
 
             <p className="text-lg text-white/70 leading-relaxed max-w-lg">
-              Have a project in mind or just want to connect? I'm always open to
+              Have a project in mind or just want to connect? I&apos;m always open to
               discussing new opportunities, creative ideas, or partnerships.
             </p>
 
@@ -115,10 +106,12 @@ const Contact = () => {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ once: true }}
           >
-            <div className="border border-white/10 rounded-xl p-8 sm:p-10 shadow-2xl bg-black">
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                
+            <div className="relative rounded-xl p-8 sm:p-10 bg-black border border-violet-600/20 shadow-[0_0_40px_rgba(124,58,237,0.1)] hover:shadow-[0_0_60px_rgba(124,58,237,0.2)] transition-shadow duration-500">
+
+              <div className="absolute inset-0 rounded-xl bg-linear-to-br from-violet-600/5 via-transparent to-transparent pointer-events-none" />
+
+              <form onSubmit={handleSubmit} className="space-y-6 relative">
+
                 <div>
                   <label
                     htmlFor="name"
@@ -134,8 +127,8 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     disabled={isDisabled}
-                    className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Your name"
+                    className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
 
@@ -154,14 +147,13 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     disabled={isDisabled}
+                    placeholder="your.email@gmail.com"
                     className={`w-full px-4 py-3 bg-black border rounded-lg text-white placeholder-white/30 focus:outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      emailError 
-                        ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/30' 
+                      emailError
+                        ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/30'
                         : 'border-white/10 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/30'
                     }`}
-                    placeholder="your.email@gmail.com"
                   />
-                  
                   {emailError && (
                     <motion.p
                       initial={{ opacity: 0, y: -5 }}
@@ -188,8 +180,8 @@ const Contact = () => {
                     required
                     disabled={isDisabled}
                     rows={5}
-                    className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/30 transition-all duration-300 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Tell me about your project..."
+                    className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/30 transition-all duration-300 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
 
@@ -207,7 +199,7 @@ const Contact = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-sm text-green-400 text-center"
                   >
-                    ✓ Message sent successfully! I'll get back to you soon.
+                    ✓ Message sent successfully! I&apos;ll get back to you soon.
                   </motion.p>
                 )}
 
@@ -220,6 +212,7 @@ const Contact = () => {
                     ✗ Something went wrong. Please try again.
                   </motion.p>
                 )}
+
               </form>
             </div>
           </motion.div>
@@ -228,6 +221,4 @@ const Contact = () => {
       </div>
     </section>
   );
-};
-
-export default Contact;
+}

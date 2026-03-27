@@ -1,22 +1,24 @@
+'use client';
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
-  const navItems = [
-    { name: "HOME", href: "#home" },
-    { name: "ABOUT", href: "#about" },
-    { name: "PROJECTS", href: "#projects" },
-    { name: "TECH", href: "#tech" },
-    { name: "CONTACT", href: "#contact" },
-  ];
+const navItems = [
+  { name: "HOME", href: "#home" },
+  { name: "ABOUT", href: "#about" },
+  { name: "PROJECTS", href: "#projects" },
+  { name: "TECH", href: "#tech" },
+  { name: "CONTACT", href: "#contact" },
+];
 
-const Navbar = () => {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navItems.map(item => item.href.substring(1));
+      const sections = navItems.map((item) => item.href.substring(1));
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {
@@ -24,7 +26,6 @@ const Navbar = () => {
         if (element) {
           const offsetTop = element.offsetTop;
           const offsetBottom = offsetTop + element.offsetHeight;
-
           if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
             setActiveSection(section);
             break;
@@ -33,9 +34,8 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -47,44 +47,37 @@ const Navbar = () => {
 
   return (
     <>
-
       <motion.nav
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.6 }}
-        className="hidden md:block fixed top-8 left-1/2 -translate-x-1/2 z-50"
+        className="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50 items-center gap-12 px-10 py-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10"
       >
-        <ul className="flex gap-12 items-center">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.href.substring(1);
-            return (
-              <li key={item.name} className="relative group">
-                <button
-                  onClick={() => scrollToSection(item.href)}
-                  className={`
-                    text-xs uppercase tracking-[0.2em] font-medium
-                    transition-colors duration-300
-                    ${isActive ? "text-white" : "text-white/50 hover:text-white"}
-                  `}
-                >
-                  {item.name}
-                </button>
+        {navItems.map((item) => {
+          const isActive = activeSection === item.href.substring(1);
+          return (
+            <div key={item.name} className="flex flex-col items-center gap-1.5">
+              <button
+                onClick={() => scrollToSection(item.href)}
+                className={`text-xs uppercase tracking-[0.2em] font-medium transition-colors duration-300 ${
+                  isActive ? "text-white" : "text-white/40 hover:text-white/80"
+                }`}
+              >
+                {item.name}
+              </button>
 
-                <motion.span
-                  className="absolute left-0 -bottom-1 h-px w-full bg-white"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: isActive ? 1 : 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  style={{ originX: 0 }}
-                />
-              </li>
-            );
-          })}
-        </ul>
+              <motion.span
+                className="w-1 h-1 rounded-full bg-purple-400"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              />
+            </div>
+          );
+        })}
       </motion.nav>
 
       <div className="md:hidden fixed top-0 left-0 right-0 z-50">
-
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -93,7 +86,7 @@ const Navbar = () => {
         >
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-white/70 hover:text-white transition-colors duration-300"
+            className="text-white/70 hover:text-white transition-colors duration-300 relative z-50"
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -102,47 +95,60 @@ const Navbar = () => {
 
         <AnimatePresence>
           {isOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="fixed inset-0 bg-black z-40 flex items-center justify-center"
-            >
-              <ul className="flex flex-col items-center gap-8">
-                {navItems.map((item, index) => {
-                  const isActive = activeSection === item.href.substring(1);
-                  return (
-                    <motion.li
-                      key={item.name}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ 
-                        duration: 0.4, 
-                        delay: 0.1 + index * 0.05,
-                        ease: "easeOut" 
-                      }}
-                    >
-                      <button
-                        onClick={() => scrollToSection(item.href)}
-                        className={`
-                          text-3xl uppercase tracking-[0.15em] font-medium
-                          transition-colors duration-300
-                          ${isActive ? "text-white" : "text-white/50 hover:text-white"}
-                        `}
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                onClick={() => setIsOpen(false)}
+              />
+
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="fixed top-0 right-0 h-full w-72 bg-zinc-950 border-l border-white/10 z-50 flex flex-col justify-center px-10"
+              >
+                <ul className="flex flex-col gap-8">
+                  {navItems.map((item, index) => {
+                    const isActive = activeSection === item.href.substring(1);
+                    return (
+                      <motion.li
+                        key={item.name}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: 0.1 + index * 0.05,
+                          ease: "easeOut",
+                        }}
+                        className="flex items-center gap-3"
                       >
-                        {item.name}
-                      </button>
-                    </motion.li>
-                  );
-                })}
-              </ul>
-            </motion.div>
+                        <span
+                          className={`w-1 h-1 rounded-full transition-colors duration-300 ${
+                            isActive ? "bg-purple-400" : "bg-white/20"
+                          }`}
+                        />
+                        <button
+                          onClick={() => scrollToSection(item.href)}
+                          className={`text-lg uppercase tracking-[0.15em] font-medium transition-colors duration-300 ${
+                            isActive ? "text-white" : "text-white/40 hover:text-white/80"
+                          }`}
+                        >
+                          {item.name}
+                        </button>
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </div>
     </>
   );
-};
-
-export default Navbar;
+}

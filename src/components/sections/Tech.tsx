@@ -1,92 +1,92 @@
-import { motion } from 'framer-motion';
-import type { Service } from '../../types/service';
+'use client';
 
-const services: Service[] = [
-  {
-    id: 1,
-    number: '01',
-    title: 'Web Development',
-    description: 'Modern, scalable web applications built for performance and long-term maintainability.',
-    tech: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'Java', 'Spring Boot', 'PostgreSQL'],
-  },
+import { motion } from 'framer-motion';
+import {
+  siHtml5,
+  siCss,
+  siJavascript,
+  siTypescript,
+  siReact,
+  siNextdotjs,
+  siTailwindcss,
+  siFramer,
+  siGit,
+  siGithub,
+  siVercel,
+} from 'simple-icons';
+
+const icons = [
+  { icon: siHtml5, label: 'HTML5' },
+  { icon: siCss, label: 'CSS3' },
+  { icon: siJavascript, label: 'JavaScript' },
+  { icon: siTypescript, label: 'TypeScript' },
+  { icon: siReact, label: 'React' },
+  { icon: siNextdotjs, label: 'Next.js' },
+  { icon: siTailwindcss, label: 'Tailwind CSS' },
+  { icon: siFramer, label: 'Framer Motion' },
+  { icon: siGit, label: 'Git' },
+  { icon: siGithub, label: 'GitHub' },
+  { icon: siVercel, label: 'Vercel' },
 ];
 
-const Tech = () => {
+const allIcons = [...icons, ...icons, ...icons, ...icons];
+
+export default function Tech() {
   return (
     <section
       id="tech"
-      className="min-h-screen bg-black text-white flex items-center px-6 sm:px-8 md:px-16 lg:px-24 py-20 pointer-events-auto"
+      className="min-h-screen bg-black text-white flex items-center justify-center py-20"
     >
-      <div className="max-w-5xl w-full">
-        
+      <div className="w-full flex flex-col items-center">
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-16 text-center px-6"
         >
           <p className="text-xs uppercase tracking-[0.3em] text-violet-400 font-medium mb-4">
-            Skills & Services
+            Skills & Technologies
           </p>
-          <div className="w-16 h-0.5 bg-linear-to-r from-violet-600 to-transparent" />
+          <div className="w-16 h-0.5 bg-linear-to-r from-violet-600 to-transparent mb-8 mx-auto" />
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+            What I Work With
+          </h2>
         </motion.div>
 
-        <div className="space-y-12">
-          {services.map((service, index) => (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              viewport={{ once: true }}
-              className="relative group cursor-default"
-            >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true }}
+          className="relative w-full overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-linear-to-r from-black to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-linear-to-l from-black to-transparent z-10 pointer-events-none" />
 
-              <motion.div
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="pb-8 border-b border-white/10"
+          <div className="flex gap-6 w-max animate-marquee-left hover:paused py-4">
+            {allIcons.map(({ icon, label }, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white hover:scale-110 transition-all duration-300 cursor-default shrink-0 shadow-md"
+                title={label}
               >
+                <svg
+                  role="img"
+                  viewBox="0 0 24 24"
+                  className="w-8 h-8"
+                  fill={`#${icon.hex}`}
+                  aria-label={label}
+                >
+                  <path d={icon.path} />
+                </svg>
+              </div>
+            ))}
+          </div>
+        </motion.div>
 
-                <div className="flex items-baseline gap-6 mb-4">
-                  <span className="text-sm font-mono text-white/40">
-                    {service.number}
-                  </span>
-                  <h3 className="text-3xl md:text-4xl font-bold tracking-tight relative">
-                    {service.title}
-                    
-                    <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-violet-600 group-hover:w-full transition-all duration-500 ease-out" />
-                  </h3>
-                </div>
-
-                <p className="text-lg text-white/70 leading-relaxed pl-14 mb-4">
-                  {service.description}
-                </p>
-
-                <div className="max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-400 ease-out">
-                  <div className="flex flex-wrap gap-2 pl-14 pt-2">
-                    {service.tech.map((item, idx) => (
-                      <span
-                        key={idx}
-                        className="text-sm px-3 py-1 rounded-full bg-violet-950/30 border border-violet-800/30 text-violet-300"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
-};
-
-export default Tech;
+}
